@@ -7,7 +7,7 @@ const Users = require('../users/users-model');
     "message": "You shall not pass!"
   }
 */
-function restricted() {}
+function restricted(req, res, next) {}
 
 /*
   If the username in req.body already exists in the database
@@ -48,7 +48,7 @@ function checkUsernameExists() {}
 */
 function checkPasswordLength(req, res, next) {
 	const { password } = req.body;
-	if (password.length <= 3) {
+	if (password.length < 3) {
 		res.status(422).json({ message: 'Password must be longer than 3 chars' });
 	} else {
 		next();

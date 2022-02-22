@@ -54,6 +54,24 @@ authRouter.post(
   }
  */
 
+authRouter.post('/login', checkBody, async (req, res) => {
+	try {
+		Users.findBy(req.user.username).then((user) => {
+			if (bcrypt.compareSync(req.body.password, user[0].password)) {
+				req.session.user = {
+					user_id: user[0].user_id,
+					username: user[0].username,
+				};
+				console.log(req.session);
+				res.status(200).json({ message: `Welcome ${user[0].username}!` });
+			} else {
+				res.status(401).json({ message: 'Invalid credentials' });
+			}
+		});
+	} catch (err) {
+		res.status(500).json('Internal Server Error!');
+	}
+});
 /**
   2 [POST] /api/auth/login { "username": "sue", "password": "1234" }
 
@@ -69,6 +87,25 @@ authRouter.post(
     "message": "Invalid credentials"
   }
  */
+
+authRouter.get('/logout', async (req, res) => {
+	try {
+		if (req.session) {
+			req.session.destroy((err) => {
+				res.status(200).json({ message: 'logged out' });
+			});
+		} else {
+			res.status(200).json({ message: 'no session' });
+		}
+	} catch (err) {
+		res.status(500).json('Internal Server Error');
+	}
+});
+
+authRouter.get('/session', (req, res) => {
+	console.log(req.session.user);
+	res.json(req.session.user);
+});
 
 /**
   3 [GET] /api/auth/logout

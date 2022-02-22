@@ -26,7 +26,7 @@ const sessionConfig = {
 	name: 'chocolatechip',
 	secret: process.env.SESSION_SECRET || 'get lost',
 	cookie: {
-		maxAge: 1000 * 60 * 60 * 24,
+		maxAge: 1000 * 60,
 		secure: process.env.SESSION_SECURE,
 		httpOnly: true,
 	},
